@@ -1,0 +1,5 @@
+== README ==
+I got sick of googling "ip address to hex" in google and
+entering stuff in there, so I wrote this. Converts IPv4
+addresses from: dotted quad, hex, decimal, and binary and
+converts to all the others.

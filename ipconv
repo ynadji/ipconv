@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+# 
+# @author Yacin Nadji <yacin@gatech.edu>
+# 
+# Copyright (c) 2010 Yacin Nadji
+# 
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+# 
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+import sys
+import re
+import socket
+import struct
+
+def is_dotted_quad(ip):
+  """returns true if string ip is a dotted quad"""
+  return re.match("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$", ip)
+
+# others to inet_aton
+def hex_to_inet(ip):
+  """hex -> inet_aton"""
+  return dec_to_inet(int(ip, 16))
+
+def bin_to_inet(ip):
+  """binary -> inet_aton"""
+  return dec_to_inet(int(ip, 2))
+
+def dec_to_inet(ip):
+  """decimal -> inet"""
+  return struct.pack('!I', int(ip))
+
+# inet_aton to others
+def inet_aton_str_to_decimal(ip):
+  """socket.inet_aton() -> decimal format"""
+  return struct.unpack('!I', ip)[0]
+
+def inet_aton_str_to_hex(ip):
+  """socket.inet_aton() -> hex format"""
+  return hex(inet_aton_str_to_decimal(ip))
+
+def inet_aton_str_to_bin(ip):
+  """socket.inet_aton() -> bin format"""
+  return bin(inet_aton_str_to_decimal(ip))
+
+# remove iconv call
+# print '{0:10} ==> {1:10d}'.format(name, phone)
+sys.argv.pop(0)
+
+for ip in sys.argv:
+    print ""
+    inet_ip = None
+
+    if is_dotted_quad(ip):
+        inet_ip = socket.inet_aton(ip)
+    elif ip.startswith("0x"):
+        inet_ip = hex_to_inet(ip)
+    elif ip.startswith("0b"):
+        inet_ip = bin_to_inet(ip)
+    else:
+        inet_ip = dec_to_inet(ip)
+
+    print "{0:10} {1:10}".format("Hex: ", inet_aton_str_to_hex(inet_ip))
+    print "{0:10} {1:10d}".format("Decimal: ", inet_aton_str_to_decimal(inet_ip))
+    print "{0:10} {1:10}".format("Quad: ", socket.inet_ntoa(inet_ip))
+    print "{0:10} {1:10}".format("Binary: ", inet_aton_str_to_bin(inet_ip))
