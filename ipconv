@@ -60,9 +60,22 @@ def inet_aton_str_to_bin(ip):
   """socket.inet_aton() -> bin format"""
   return bin(inet_aton_str_to_decimal(ip))
 
+def usage():
+  """usage string"""
+  print "usage: ipconv IP1 IP2 ... IPn\n"
+  print "valid formats:"
+  print "Dotted Quad: e.g., 192.168.1.1"
+  print "Decimal: e.g., 3232235777"
+  print "Hex: e.g., 0xc0a80101"
+  print "Binary: e.g., 0b11000000101010000000000100000001"
+
+
 # remove iconv call
-# print '{0:10} ==> {1:10d}'.format(name, phone)
 sys.argv.pop(0)
+
+if not sys.argv:
+    usage()
+    sys.exit(-1)
 
 for ip in sys.argv:
     print ""
@@ -74,8 +87,11 @@ for ip in sys.argv:
         inet_ip = hex_to_inet(ip)
     elif ip.startswith("0b"):
         inet_ip = bin_to_inet(ip)
-    else:
+    elif ip.isdigit():
         inet_ip = dec_to_inet(ip)
+    else:
+        print "Format of", ip, "not understood. Skipping."
+        continue
 
     print "{0:10} {1:10}".format("Hex: ", inet_aton_str_to_hex(inet_ip))
     print "{0:10} {1:10d}".format("Decimal: ", inet_aton_str_to_decimal(inet_ip))
