@@ -1,3 +1,15 @@
 == README ==
 I got sick of googling "ip address to hex" in google and entering stuff in there, so I wrote this. Converts IPv4
 addresses from: dotted quad, hex, decimal, and binary to all the others.
+
+% ipconv 192.168.2.1 3442236033
+
+Hex:       0xc0a80201
+Decimal:   3232236033
+Quad:      192.168.2.1
+Binary:    0b11000000101010000000001000000001
+
+Hex:       0xcd2c5a81
+Decimal:   3442236033
+Quad:      205.44.90.129
+Binary:    0b11001101001011000101101010000001
